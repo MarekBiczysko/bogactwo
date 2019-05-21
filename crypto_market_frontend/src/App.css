@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+}
+
+.currencyButton {
+  display: inline-block;
+  text-decoration: none;
+  color: #668ad8;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  transition: 1s;
+  margin-bottom: 50px;
+}
+
+.currencyButtonOn {
+  border: double 4px #52d854;
+}
+
+.currencyButtonOff {
+  border: double 4px #668ad8;
+}
+
+.currencyButton:hover {
+  -webkit-transform: rotateY(360deg);
+  -ms-transform: rotateY(360deg);
+  transform: rotateY(360deg);
+}
