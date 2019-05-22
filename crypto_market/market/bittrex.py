@@ -4,18 +4,19 @@ import requests
 from django_celery_beat.models import PeriodicTask
 
 from crypto_market.celery import app
-from . models import AvailableCurrencies
+from .models import AvailableCurrencies, CurrencyData
 
 MAIN_API_URL = 'https://api.bittrex.com/api/v1.1/public/'
 GET_CURRENCIES_URL = MAIN_API_URL + 'getcurrencies'
-
+GET_MARKETS_URL = MAIN_API_URL + 'getmarkets'
+GET_CURRENCY_DATA_URL = MAIN_API_URL + 'getmarketsummary?market=usd-'
 
 @app.task()
-def get_available_currencies(currency):
-    print(f'fetching currencies from {GET_CURRENCIES_URL}, kwarg: {currency}')
+def get_available_currencies():
+    print(f'fetching currencies from {GET_MARKETS_URL}')
     timestamp = datetime.now()
 
-    response = requests.get(GET_CURRENCIES_URL)
+    response = requests.get(GET_MARKETS_URL)
     data = response.json()
 
     try:
@@ -26,7 +27,11 @@ def get_available_currencies(currency):
         return
 
     if is_success:
-        fetched_currencies = {entry['Currency']: entry['CurrencyLong'] for entry in data['result']}
+        fetched_currencies = {
+            entry['MarketCurrency']: entry['MarketCurrencyLong']
+            for entry in data['result']
+            if entry['MarketName'].startswith('USD-')
+        }
     else:
         print('Get currencies fetch success==false: ', data)
         return
@@ -49,3 +54,35 @@ def get_available_currencies(currency):
         task.save()
 
 get_available_currencies.counter  = 0
+
+
+@app.task()
+def get_currency_data(currency):
+    url = GET_CURRENCY_DATA_URL + currency
+
+    print(f'fetching currency data from {url}')
+
+    response = requests.get(url)
+    data = response.json()
+
+    try:
+        is_success = data['success']
+
+    except KeyError:
+        print('Get currency data fetch error')
+        return
+
+    if is_success:
+        result = data['result'][0]
+
+        CurrencyData.objects.create(
+            name=currency,
+            market_name=result['MarketName'],
+            high=result['High'],
+            low=result['Low'],
+            last=result['Last'],
+            timestamp=result['TimeStamp'],
+        )
+    else:
+        print('Get currency data fetch success==false: ', data)
+        return

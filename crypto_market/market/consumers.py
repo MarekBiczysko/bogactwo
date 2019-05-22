@@ -2,12 +2,11 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
-from .models import CurrencyData
-
 
 class CurrencyDataConsumer(WebsocketConsumer):
     def connect(self):
-        self.room_group_name = 'currency'
+        self.currency = self.scope['url_route']['kwargs']['curr']
+        self.room_group_name = f'currency_data_{self.currency}'
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
@@ -20,43 +19,23 @@ class CurrencyDataConsumer(WebsocketConsumer):
             self.channel_name
         )
 
-    def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        currency = text_data_json['currency']
-        value = text_data_json['value']
-        id = text_data_json['id']
-
-        # currency_data = CurrencyData.objects.create(
-        #     currency=content['currency'],
-        #     value=content['value'],
-        # )
-
-        currency_data = CurrencyData.objects.get(pk=id)
-
-        currency_data.currency = currency
-        currency_data.value = value
-        currency_data.save()
-
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'add_currency_data',
-                'currency': currency,
-                'value': value,
-                'id': id,
-            }
-        )
-
-    def add_currency_data(self, event):
-        currency = event['currency']
-        value = event['value']
-        id = event['id']
+    def currency_data_update(self, event):
+        print('CurrencyDataConsumer currency_data_update', )
+        name = event['name']
+        market_name = event['market_name']
+        high = event['high']
+        low = event['low']
+        last = event['last']
+        timestamp = event['timestamp']
 
         self.send(text_data=json.dumps(
             {
-                'currency': currency,
-                'value': value,
-                'id': id,
+                'name': name,
+                'market_name': market_name,
+                'high': high,
+                'low': low,
+                'last': last,
+                'timestamp': timestamp,
             }
         ))
 
@@ -74,33 +53,6 @@ class CurrencyListConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
-        )
-
-    def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        currency = text_data_json['currency']
-        value = text_data_json['value']
-        id = text_data_json['id']
-
-        # currency_data = CurrencyData.objects.create(
-        #     currency=content['currency'],
-        #     value=content['value'],
-        # )
-
-        currency_data = CurrencyData.objects.get(pk=id)
-
-        currency_data.currency = currency
-        currency_data.value = value
-        currency_data.save()
-
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'add_currency_data',
-                'currency': currency,
-                'value': value,
-                'id': id,
-            }
         )
 
     def currency_list_update(self, event):

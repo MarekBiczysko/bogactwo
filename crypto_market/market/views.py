@@ -4,7 +4,7 @@ from django.views import View
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 
-from market.celery import start_fetch_available_currencies
+from market.celery import start_fetch_available_currencies, start_fetch_currency_data
 from .models import CurrencyData, UserSettings, AvailableCurrencies
 from .serializers import CurrencyDataSerializer, UserSettingsSerializer, AvailableCurrenciesSerializer
 
@@ -32,10 +32,19 @@ class UserSettingsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSettingsSerializer
 
 
-class StartTaskView(APIView):
+class StartFetchAvailableCurrencies(APIView):
     def get(self, request, *args, **kwargs):
         print('\n\n!!\n', request.user)
         print('\n\n!!\n', request.META)
-        print('start task view')
+        print('StartFetchAvailableCurrencies')
         start_fetch_available_currencies()
         return HttpResponse('Hello, YEAH!')
+
+class StartFetchCurrencyData(APIView):
+    def get(self, request, *args, **kwargs):
+        # print('\n\n!!\n', request.user)
+        # print('\n\n!!\n', request.META)
+        currency = kwargs.get('curr')
+        print('StartFetchCurrencyData', currency)
+        start_fetch_currency_data(currency)
+        return HttpResponse(f'Hello, YEAH! {currency}')

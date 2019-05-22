@@ -4,18 +4,44 @@ from django.dispatch import receiver
 from jsonfield import JSONField
 from django.contrib.auth.models import User
 
-# Create your models here.
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 from rest_framework.exceptions import ValidationError
 
 
 class CurrencyData(models.Model):
-    currency            = models.CharField(max_length=20, unique=True)
-    currency_long_name  = models.CharField(max_length=50, blank=True, null=True)
-    value               = models.IntegerField()
-    timestamp           = models.DateTimeField(auto_now_add=True)
+    name        = models.CharField(max_length=20)
+    market_name = models.CharField(max_length=20)
+    high        = models.FloatField(null=True, blank=True)
+    low         = models.FloatField(null=True, blank=True)
+    last        = models.FloatField(null=True, blank=True)
+    timestamp   = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.timestamp} | {self.value} {self.currency} {self.currency_long_name}'
+        return f'{self.timestamp} | {self.name} {self.last}'
+
+
+@receiver(post_save, sender=CurrencyData)
+def broadcast_currency_data(sender, instance, *args, **kwargs):
+    channel_layer = get_channel_layer()
+    print('broadcast_currency_data signal')
+    print('channel layer: ', channel_layer)
+
+    group = f'currency_data_{instance.name}'
+
+    async_to_sync(channel_layer.group_send)(
+        group,
+        {
+            "type": "currency_data_update",
+            "name": instance.name,
+            "market_name": instance.market_name,
+            "high": instance.high,
+            "low": instance.low,
+            "last": instance.last,
+            "timestamp": instance.timestamp,
+        }
+    )
 
 
 class AvailableCurrencies(models.Model):
@@ -25,26 +51,16 @@ class AvailableCurrencies(models.Model):
     def __str__(self):
         return f'AvailableCurrencies | {self.updated}'
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        print('SAVING AvailableCurrencies')
-        super().save(force_insert=False, force_update=False, using=None,
-             update_fields=None)
-
 
 @receiver(pre_save, sender=AvailableCurrencies)
 def allow_only_one_instance(sender, instance, *args, **kwargs):
-    print('allow_only_one_instance signal')
     if AvailableCurrencies.objects.exclude(pk=instance.pk).exists():
         raise ValidationError('A AvailableCurrencies object already exists')
 
 
 @receiver(post_save, sender=AvailableCurrencies)
 def broadcast_available_currencies(sender, instance, *args, **kwargs):
-    from channels.layers import get_channel_layer
     channel_layer = get_channel_layer()
-    from asgiref.sync import async_to_sync
-
     print('broadcast_available_currencies signal')
     print('channel layer: ', channel_layer)
 
