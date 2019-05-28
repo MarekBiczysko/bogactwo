@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, Form, Input, Row, Spinner} from 'reactstrap';
-import Chart from "./Chart";
+import {Button, Col, Container, ListGroupItem, Row} from 'reactstrap';
+import ChartContainer from "./ChartContainer";
 
 export default class ChartsContainer extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class ChartsContainer extends React.Component {
 
     return Object.keys(currencies).map(function (key) {
       return (
-        <Chart key={key} currency={currencies[key]}/>
+        <ChartContainer key={key} currency={currencies[key]}/>
       )
     });
   };
@@ -21,16 +21,12 @@ export default class ChartsContainer extends React.Component {
   render() {
     return (
       <Container>
-        <Row className={'mt-2'}>
-          {this.props.selectedCurrencies ?
-            <div>
-              Selected Currencues {this.props.selectedCurrencies}
-            </div> :
-            <div> NO CURRENCIES SELECTED</div>
-          }
-        </Row>
-        <Row className={'mt-2'}>
-          {this.props.selectedCurrencies && this.createChildren()}
+        <Row className={'mt-2 justify-content-center'}>
+          {
+            this.props.selectedCurrencies.length ?
+              this.createChildren()
+              :
+              <div>Please select market</div>}
         </Row>
       </Container>
     )

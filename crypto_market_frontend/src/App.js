@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css'
 
 import {
-  addCurrencyListFetchTask,
   LogoutUser,
   AuthUser,
   TryAuthUser
@@ -27,15 +26,11 @@ class App extends React.Component {
       username: ''
     };
 
-    this.startTaskCurrencyList = this.startTaskCurrencyList.bind(this);
     this.handleAuth = this.handleAuth.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.tryLogin = this.tryLogin.bind(this);
   }
 
-  async startTaskCurrencyList() {
-    await addCurrencyListFetchTask();
-  }
 
   async tryLogin() {
     const userData = await TryAuthUser(this.props.currency);
@@ -44,10 +39,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.state.logged_in && this.tryLogin();
-  }
-
-  componentDidUpdate() {
-    this.startTaskCurrencyList()
   }
 
   async handleAuth(username, password, action) {
@@ -81,7 +72,7 @@ class App extends React.Component {
         {
           this.state.username ?
             <MarketContainer /> :
-            <p>Please Login</p>
+            <p style={{textAlign: 'center', paddingTop: 50}}>Please Login</p>
         }
       </React.Fragment>
     );

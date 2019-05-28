@@ -11,7 +11,7 @@ export default class MarketContainer extends React.Component {
     this.updateGlobalSelected = this.updateGlobalSelected.bind(this);
 
     this.state = {
-      selected: null,
+      selected: [],
     };
   }
 
@@ -22,7 +22,6 @@ export default class MarketContainer extends React.Component {
   }
 
   render() {
-    console.log('MarketContainer state', this.state);
     return (
       <Container>
         <Row>

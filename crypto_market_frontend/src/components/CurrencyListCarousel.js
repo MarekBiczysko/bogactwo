@@ -71,8 +71,6 @@ export default class CurrencyListCarousel extends React.Component {
   };
 
   render() {
-    console.log('render CurrencyListCarousel');
-
     return (
       <React.Fragment>
         <ItemsCarousel
