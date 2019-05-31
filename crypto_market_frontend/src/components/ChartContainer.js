@@ -82,6 +82,7 @@ export default class ChartContainer extends React.Component {
     this.ws = new WebSocket(`ws://localhost:8000/ws/currency_data/${this.props.currency}`);
 
     this.ws.onmessage = e => {
+
       const parsedData = JSON.parse(e.data);
 
       const newCurrentDataSet = {...this.state.chartData.datasets[0]};
@@ -112,9 +113,12 @@ export default class ChartContainer extends React.Component {
     await addCurrencyDataFetchTask(this.props.currency);
   }
 
+    componentDidUpdate() {
+    }
   render() {
     return (
       <React.Fragment>
+        <p>{this.props.currency}</p>
         {
           this.state.fetched ?
             <Chart

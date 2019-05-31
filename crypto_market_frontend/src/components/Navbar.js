@@ -13,51 +13,53 @@ import {
 
 import LogoutForm from './LogoutForm'
 import AuthForm from "./AuthForm";
+import {connect} from "react-redux";
 
-export default class NavBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.toggle = this.toggle.bind(this);
+class NavBar extends React.Component {
+  state = {isOpen: false};
 
-    this.state = {
-      isOpen: false,
-    };
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
+  toggle = () => this.setState({isOpen: !this.state.isOpen});
 
   render() {
-    const {username, handleAuth, handleLogout} = this.props;
+    const {authed, username} = this.props;
 
     return (
-      <div>
-        <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">CryptoMarketCharts</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <UncontrolledDropdown nav inNavbar className="mr-5">
-                <DropdownToggle >
-                  Create Account
-                </DropdownToggle>
-                <DropdownMenu right className="ml-5">
-                    <AuthForm handleAuth={handleAuth} action={'Register'} />
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <NavItem>
-                {
-                  username ?
-                    <LogoutForm handleLogout={handleLogout} username={username}/> :
-                    <AuthForm handleAuth={handleAuth} action={'Login'} />
-                }
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>
-      </div>
+
+      <Navbar color="light" light expand="md">
+        <NavbarBrand href="/">
+          CryptoMarketCharts
+        </NavbarBrand>
+        <NavbarToggler
+          onClick={this.toggle}
+        />
+        <Collapse isOpen={this.state.isOpen} navbar>
+          <Nav className="ml-auto" navbar>
+            <UncontrolledDropdown nav inNavbar className="mr-5">
+              <DropdownToggle>
+                Create Account
+              </DropdownToggle>
+              <DropdownMenu right className="ml-5">
+                <AuthForm action={'Register'} />
+              </DropdownMenu>
+            </UncontrolledDropdown>
+            <NavItem>
+              {
+                authed
+                  ? <LogoutForm username={username} />
+                  : <AuthForm action={'Login'} />
+              }
+            </NavItem>
+          </Nav>
+        </Collapse>
+      </Navbar>
+
     );
   }
 }
+
+const mapStateToProps = state => ({
+  authed: state.authenticated || false,
+  username: state.username,
+});
+
+export default connect(mapStateToProps)(NavBar);

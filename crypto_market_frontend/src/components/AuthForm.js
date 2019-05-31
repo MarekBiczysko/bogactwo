@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Form, Input} from 'reactstrap';
+import withAuth from "../withAuth.js";
 
 function AuthForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   return (
     <Form inline>
       <Input
@@ -38,4 +40,4 @@ function AuthForm(props) {
   )
 }
 
-export default AuthForm;
+export default withAuth(AuthForm)

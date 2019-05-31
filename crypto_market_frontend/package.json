@@ -10,10 +10,14 @@
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
     "react-items-carousel": "^2.3.6",
+    "react-redux": "^7.0.3",
     "react-scripts": "3.0.0",
     "react-tooltip": "^3.10.0",
     "react-websocket": "^2.0.1",
-    "reactstrap": "^8.0.0"
+    "reactstrap": "^8.0.0",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,11 +1,13 @@
 import React from 'react';
 import {Button} from 'reactstrap';
+import withAuth from "../withAuth.js";
 
-function LogoutForm(props) {
-  console.log('LogoutForm props', props);
+const LogoutForm = (props) =>{
   return (
-    <Button onClick={() => props.handleLogout(props.username)}>Logout {props.username}</Button>
+    <Button onClick={() => props.handleLogout(props.username)}>
+      Logout {props.username}
+    </Button>
   )
-}
+};
 
-export default LogoutForm;
+export default withAuth(LogoutForm);

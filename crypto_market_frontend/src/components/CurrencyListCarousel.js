@@ -10,24 +10,18 @@ const shallowCompare = (obj1, obj2) => {
 };
 
 export default class CurrencyListCarousel extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.toggleSelected = this.toggleSelected.bind(this);
-    this.isSelected = this.isSelected.bind(this);
-
-    this.state = {
-      selected: [],
-    };
-  }
+  state = {
+    selected: [],
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     const selectedChanged = !isEqual(this.state.selected, nextState.selected);
     const currencyListChanged = !shallowCompare(this.props.currencyList, nextProps.currencyList);
+
     return selectedChanged || currencyListChanged;
   }
 
-  toggleSelected(e) {
+  toggleSelected = (e) => {
     console.log('toggle selected', e.target.id);
     const key = e.target.id;
     const index = this.state.selected.indexOf(key);
@@ -42,29 +36,28 @@ export default class CurrencyListCarousel extends React.Component {
       this.setState((prevState) => {
         let newArray = prevState.selected.concat(key);
         this.props.updateGlobalSelected(newArray);
+
         return {selected: newArray};
       });
     }
-  }
+  };
 
-  isSelected(key) {
+  isSelected = (key) => {
     return this.state.selected.indexOf(key) >= 0;
-  }
+  };
 
   createChildren = () => {
-
     const items = this.props.currencyList;
     const isSelected = this.isSelected;
-    const toggleCallback = this.toggleSelected;
 
-    return Object.keys(items).map(function (key) {
+    return Object.keys(items).map( (key) => {
       return (
         <CurrencyListCarouselButton
           selected={isSelected(key)}
           key={key}
           text={key}
           hoverText={items[key]}
-          callback={toggleCallback}
+          callback={this.toggleSelected}
         />
       )
     });
@@ -81,7 +74,7 @@ export default class CurrencyListCarousel extends React.Component {
           firstAndLastGutter={true}
           freeScrolling={true}
         >
-          {this.createChildren()}
+          {this.state.selected && this.createChildren()}
         </ItemsCarousel>
       </React.Fragment>
     )

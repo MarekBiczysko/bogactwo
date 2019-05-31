@@ -4,13 +4,9 @@ import CurrencyListCarousel from "./CurrencyListCarousel";
 import {addCurrencyListFetchTask} from "../api";
 
 export default class CurrencyList extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currencyList: [],
-    };
-  }
+  state = {
+    currencyList: [],
+  };
 
   async startTaskCurrencyList() {
     await addCurrencyListFetchTask();
@@ -23,6 +19,7 @@ export default class CurrencyList extends React.PureComponent {
 
     this.ws.onmessage = e => {
       const parsedData = JSON.parse(e.data);
+
       this.setState({
         currencyList: parsedData.currency_list,
       });
@@ -34,15 +31,19 @@ export default class CurrencyList extends React.PureComponent {
   }
 
   render() {
+    const { updateGlobalSelected } = this.props;
+    const { currencyList } = this.state;
+
     return (
       <Container>
         <Row className={'justify-content-center mt-2'}>
-          {Object.keys(this.state.currencyList).length ?
-            <CurrencyListCarousel
-              updateGlobalSelected={this.props.updateGlobalSelected}
-              currencyList={this.state.currencyList}
-            /> :
-            <Spinner/>
+          {Object.keys(currencyList).length
+            ? (
+              <CurrencyListCarousel
+                updateGlobalSelected={updateGlobalSelected}
+                currencyList={currencyList}
+              />)
+            : <Spinner/>
           }
         </Row>
       </Container>

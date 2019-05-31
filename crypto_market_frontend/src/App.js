@@ -1,82 +1,45 @@
 import React from 'react';
 import './App.css'
 
-import {
-  LogoutUser,
-  AuthUser,
-  TryAuthUser
-} from './api';
-
 import NavBar from "./components/Navbar";
 import MarketContainer from "./components/MarketContainer";
+import {connect} from "react-redux";
 
 class App extends React.Component {
+  state = {
+    isLogged: false, errorMsg: null
+  };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currency_data: [],
-      currency_list: {},
-      current_data_id: 0,
-      current_data_item: {},
-      creating: true,
-      fetching: true,
-      logged_in: !!localStorage.getItem('token'),
-      username: ''
-    };
-
-    this.handleAuth = this.handleAuth.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.tryLogin = this.tryLogin.bind(this);
-  }
-
-
-  async tryLogin() {
-    const userData = await TryAuthUser(this.props.currency);
-    userData && this.setState({username: userData.username});
-  }
-
-  componentDidMount() {
-    this.state.logged_in && this.tryLogin();
-  }
-
-  async handleAuth(username, password, action) {
-    const data = await AuthUser(username, password, action);
-    if (data && data.token) {
-      localStorage.setItem('token', data.token);
-      this.setState({
-        logged_in: true,
-        username: data.username
-      });
-    } else {
-      console.log('LOGIN WAS NOT SUCCESSFUL: ', data)
+  static getDerivedStateFromProps(pProps) {
+    return {
+      isLogged: pProps.authed,
+      errorMsg: pProps.errorMsg
     }
-  };
-
-  async handleLogout(username) {
-    // await LogoutUser(username);
-    localStorage.removeItem('token');
-    this.setState({logged_in: false, username: ''});
-  };
+  }
 
   render() {
-    console.log('this.state', this.state);
+
     return (
       <React.Fragment>
-        <NavBar
-          handleAuth={this.handleAuth}
-          handleLogout={this.handleLogout}
-          username={this.state.username}
-        />
+        <NavBar />
         {
-          this.state.username ?
-            <MarketContainer /> :
-            <p style={{textAlign: 'center', paddingTop: 50}}>Please Login</p>
+          this.state.isLogged
+            ? <MarketContainer/>
+            : (
+              <p style={{textAlign: 'center', paddingTop: 50}}>
+                Please Login
+              </p>
+            )
         }
+        {!!this.props.errorMsg && <p>{this.props.errorMsg}</p>}
       </React.Fragment>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  authed: state.authenticated,
+  errorMsg: state.errorMsg,
+});
+
+export default connect(mapStateToProps)(App);
