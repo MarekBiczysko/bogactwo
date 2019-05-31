@@ -1,17 +1,16 @@
 export const setUserName = username => {
-  console.log('username', username)
-
   return {
-    type: 'set_username',
+    type: 'SET_USERNAME',
     username
   }
 };
 
 export const logout = () => ({
-  type: 'logout'
+  type: 'LOGOUT'
 });
 
 const auth = "[AUTH]";
 
 export const AUTH_USER = `${auth} user success`;
-export const AUTH_USER_FAILURE = `${auth} user failer`;
+
+export const AUTH_USER_FAILURE = `${auth} user failure`;

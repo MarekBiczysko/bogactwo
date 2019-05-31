@@ -25,7 +25,7 @@ const reducer = (state = initialstate, action) => {
     }
   }
 
-  if (action.type === 'logout') {
+  if (action.type === 'LOGOUT') {
     return {
       ...state,
       authenticated: false,
@@ -34,7 +34,7 @@ const reducer = (state = initialstate, action) => {
   }
 
 
-  if (action.type === 'set_username') {
+  if (action.type === 'SET_USERNAME') {
     return {
       ...state,
       username: action.username,

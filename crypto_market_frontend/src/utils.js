@@ -6,7 +6,6 @@ const handleAuth =  (username, password, action) =>  async dispatch => {
 
     if (data && data.token) {
       localStorage.setItem('token', data.token);
-
       return dispatch({ type: actions.AUTH_USER, username })
     }
 
@@ -18,9 +17,7 @@ export { handleAuth }
  const handleLogout = username => dispatch => {
     // await LogoutUser(username);
     localStorage.removeItem('token');
-
-    dispatch({ type: 'logout' })
+    dispatch(actions.logout())
   };
 
 export { handleLogout }
-
