@@ -6,6 +6,20 @@ function AuthForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleSubmit = () => {
+    if (username && password) {
+      props.handleAuth(username, password, props.action);
+      setPassword('');
+      setUsername('');
+    }
+  };
+
+  const handleKeyPress = (target) => {
+    if (target.charCode === 13) {
+      handleSubmit();
+    }
+  };
+
   return (
     <Form inline>
       <Input
@@ -15,6 +29,7 @@ function AuthForm(props) {
         type="text"
         name="username"
         required="required"
+        onKeyPress={handleKeyPress}
       />
       <Input
         value={password}
@@ -23,16 +38,10 @@ function AuthForm(props) {
         type="text"
         name="password"
         required="required"
+        onKeyPress={handleKeyPress}
       />
 
-      <Button
-        onClick={() => {
-          if (username && password) {
-            props.handleAuth(username, password, props.action);
-            setPassword('');
-            setUsername('');
-          }
-        }}>
+      <Button onClick={handleSubmit}>
         {props.action}
       </Button>
 

@@ -9,7 +9,7 @@ const handleAuth =  (username, password, action) =>  async dispatch => {
       return dispatch({ type: actions.AUTH_USER, username })
     }
 
-  return dispatch({ type: actions.AUTH_USER_FAILURE, errorMsg: 'auth failed!!' })
+  return dispatch({ type: actions.AUTH_USER_FAILURE, errorMsg: 'User authentication failure' })
 };
 
 export { handleAuth }
@@ -17,7 +17,7 @@ export { handleAuth }
  const handleLogout = username => dispatch => {
     // await LogoutUser(username);
     localStorage.removeItem('token');
-    dispatch(actions.logout())
+    dispatch({type: actions.AUTH_LOGOUT})
   };
 
 export { handleLogout }

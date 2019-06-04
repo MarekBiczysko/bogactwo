@@ -20,12 +20,11 @@ const reducer = (state = initialstate, action) => {
   if (action.type === actions.AUTH_USER_FAILURE) {
     return {
       ...state,
-      errorMsg: 'AUTH FAUILRE',
-
+      errorMsg: action.errorMsg,
     }
   }
 
-  if (action.type === 'LOGOUT') {
+  if (action.type === actions.AUTH_LOGOUT) {
     return {
       ...state,
       authenticated: false,
@@ -33,8 +32,7 @@ const reducer = (state = initialstate, action) => {
     }
   }
 
-
-  if (action.type === 'SET_USERNAME') {
+  if (action.type === actions.SET_USERNAME) {
     return {
       ...state,
       username: action.username,
