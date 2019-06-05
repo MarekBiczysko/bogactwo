@@ -64,16 +64,31 @@ export default class ChartContainer extends React.Component {
     tooltips: {
       enabled: true
     },
+    legend: {
+      display: true,
+      position: 'top',
+      labels: {
+        boxWidth: 10,
+        fontSize: 8,
+      }
+    },
     scales: {
       xAxes: [
         {
           ticks: {
+            callback: function (value, index, values) {
+              return value.split('T')
+            },
             autoSkip: true,
-            maxTicksLimit: 10
-          }
+            maxTicksLimit: 3,
+            fontSize: 6,
+            stepSize: 1,
+            beginAtZero: true,
+          },
         }
       ]
-    }
+    },
+
   };
 
   componentDidMount() {
@@ -113,19 +128,17 @@ export default class ChartContainer extends React.Component {
     await addCurrencyDataFetchTask(this.props.currency);
   }
 
-    componentDidUpdate() {
-    }
   render() {
     return (
       <React.Fragment>
-        <p>{this.props.currency}</p>
         {
           this.state.fetched ?
             <Chart
+              ref={this.chartRef}
               data={this.state.chartData}
               options={this.chartOptions}
             />
-            : <Spinner/>}
+            : <Spinner className={'mx-auto my-auto'}/>}
       </React.Fragment>
     )
   }

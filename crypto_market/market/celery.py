@@ -5,7 +5,7 @@ import json
 
 def start_fetch_available_currencies():
     schedule, created = IntervalSchedule.objects.get_or_create(
-        every=10,
+        every=2,
         period=IntervalSchedule.SECONDS,
     )
 
@@ -23,7 +23,7 @@ def start_fetch_available_currencies():
 
 def start_fetch_currency_data(currency):
     schedule, created = IntervalSchedule.objects.get_or_create(
-        every=10,
+        every=2,
         period=IntervalSchedule.SECONDS,
     )
 

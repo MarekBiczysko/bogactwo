@@ -24,11 +24,11 @@ export default class MarketContainer extends React.Component {
     return (
       <Container>
         <Row>
-          <Col lg="12" className={"border"}>
-            <Row className={"justify-content-center border mt-2"} style={{height: 150}}>
+          <Col lg="12">
+            <Row className={"justify-content-center my-3 py-1 border rounded"} style={{height: 150}}>
               <CurrencyList updateGlobalSelected={this.updateGlobalSelected}/>
             </Row>
-            <Row className={"justify-content-center h-80 border"}>
+            <Row className={"justify-content-center border rounded"}>
               <ChartsContainer selectedCurrencies={this.state.selected}/>
             </Row>
           </Col>
