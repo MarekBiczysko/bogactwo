@@ -17,12 +17,10 @@ import {setUserName} from "./actions";
 
 const storeWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = storeWithMiddleware(reducer,composeWithDevTools() );
-// const store = createStore(reducer, composeWithDevTools());
 const token = localStorage.getItem('token');
 
 const tryLogin = async () => {
   const {username} = await TryAuthUser();
-
   username && store.dispatch(setUserName(username));
 };
 

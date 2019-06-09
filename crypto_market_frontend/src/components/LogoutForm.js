@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from 'reactstrap';
 import withAuth from "../withAuth.js";
 
-const LogoutForm = (props) =>{
+const LogoutForm = (props) => {
   return (
     <Button onClick={() => props.handleLogout(props.username)}>
       Logout {props.username}

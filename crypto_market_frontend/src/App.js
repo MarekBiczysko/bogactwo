@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css'
 
 import NavBar from "./components/Navbar";
-import MarketContainer from "./components/MarketContainer";
+import Market from "./components/Market";
 import {connect} from "react-redux";
 
 class App extends React.Component {
@@ -10,10 +10,10 @@ class App extends React.Component {
     isLogged: false, errorMsg: null
   };
 
-  static getDerivedStateFromProps(pProps) {
+  static getDerivedStateFromProps(props) {
     return {
-      isLogged: pProps.authed,
-      errorMsg: pProps.errorMsg
+      isLogged: props.authed,
+      errorMsg: props.errorMsg
     }
   }
 
@@ -24,7 +24,7 @@ class App extends React.Component {
         <NavBar />
         {
           this.state.isLogged
-            ? <MarketContainer/>
+            ? <Market/>
             : (
               <p style={{textAlign: 'center', paddingTop: 50}}>
                 Please Login

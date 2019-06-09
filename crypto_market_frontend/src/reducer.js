@@ -3,7 +3,7 @@ import * as actions from "./actions.js"
 const initialstate = {
   authenticated: false,
   username: null,
-  selected: null,
+  selected: [],
 };
 
 const reducer = (state = initialstate, action) => {
@@ -37,6 +37,13 @@ const reducer = (state = initialstate, action) => {
       ...state,
       username: action.username,
       authenticated: true
+    }
+  }
+
+  if (action.type === actions.SET_SELECTED) {
+    return {
+      ...state,
+      selected: action.selected
     }
   }
 

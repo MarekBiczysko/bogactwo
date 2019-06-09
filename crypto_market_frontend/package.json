@@ -11,7 +11,6 @@
     "react-dom": "^16.8.6",
     "react-items-carousel": "^2.3.6",
     "react-redux": "^7.0.3",
-    "react-resize-detector": "^4.1.4",
     "react-scripts": "3.0.0",
     "react-tooltip": "^3.10.0",
     "react-websocket": "^2.0.1",

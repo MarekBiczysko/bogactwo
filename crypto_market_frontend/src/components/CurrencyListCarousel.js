@@ -3,47 +3,38 @@ import React from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import {isEqual} from "lodash";
 import CurrencyListCarouselButton from "./CurrencyListCarouselButton";
+import connect from "react-redux/es/connect/connect";
+import {setSelected} from "../actions";
 
 const shallowCompare = (obj1, obj2) => {
   return (Object.keys(obj1).length === Object.keys(obj2).length &&
   Object.keys(obj1).every(key => obj1[key] === obj2[key]))
 };
 
-export default class CurrencyListCarousel extends React.Component {
-  state = {
-    selected: [],
-  };
+class CurrencyListCarousel extends React.Component {
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const selectedChanged = !isEqual(this.state.selected, nextState.selected);
+  shouldComponentUpdate(nextProps) {
+    const selectedChanged = !isEqual(this.props.selected, nextProps.selected);
     const currencyListChanged = !shallowCompare(this.props.currencyList, nextProps.currencyList);
 
     return selectedChanged || currencyListChanged;
   }
 
   toggleSelected = (e) => {
-    console.log('toggle selected', e.target.id);
     const key = e.target.id;
-    const index = this.state.selected.indexOf(key);
+    const index = this.props.selected.indexOf(key);
 
     if (index >= 0) {
-      this.setState((prevState) => {
-        let filteredArray = prevState.selected.filter(item => item !== key);
-        this.props.updateGlobalSelected(filteredArray);
-        return {selected: filteredArray};
-      });
+      let filteredArray = this.props.selected.filter(item => item !== key);
+      this.props.setSelected(filteredArray);
     } else {
-      this.setState((prevState) => {
-        let newArray = prevState.selected.concat(key);
-        this.props.updateGlobalSelected(newArray);
-
-        return {selected: newArray};
-      });
+      let newArray = [key].concat(this.props.selected);
+      this.props.setSelected(newArray);
     }
   };
 
   isSelected = (key) => {
-    return this.state.selected.indexOf(key) >= 0;
+    return this.props.selected.indexOf(key) >= 0;
   };
 
   createChildren = () => {
@@ -74,9 +65,15 @@ export default class CurrencyListCarousel extends React.Component {
           firstAndLastGutter={true}
           freeScrolling={true}
         >
-          {this.state.selected && this.createChildren()}
+          {this.props.selected && this.createChildren()}
         </ItemsCarousel>
       </React.Fragment>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  selected: state.selected,
+});
+
+export default connect(mapStateToProps, {setSelected})(CurrencyListCarousel);

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {handleAuth, handleLogout} from "./utils";
-import {setUserName} from "./actions.js"
 
 const withAuth = Wrapped => {
   class Temp extends Component {
@@ -18,7 +17,6 @@ const withAuth = Wrapped => {
   return connect(mapStateToProps, {
     handleAuth,
     handleLogout,
-    setUserName
   })(Temp);
 };
 

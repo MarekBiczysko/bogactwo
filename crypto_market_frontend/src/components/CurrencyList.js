@@ -31,7 +31,6 @@ export default class CurrencyList extends React.PureComponent {
   }
 
   render() {
-    const { updateGlobalSelected } = this.props;
     const { currencyList } = this.state;
 
     return (
@@ -40,7 +39,6 @@ export default class CurrencyList extends React.PureComponent {
           {Object.keys(currencyList).length
             ? (
               <CurrencyListCarousel
-                updateGlobalSelected={updateGlobalSelected}
                 currencyList={currencyList}
               />)
             : <Spinner/>
