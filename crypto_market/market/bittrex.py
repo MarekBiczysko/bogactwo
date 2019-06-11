@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 import requests
 from django_celery_beat.models import PeriodicTask
@@ -13,7 +12,6 @@ GET_CURRENCY_DATA_URL = MAIN_API_URL + 'getmarketsummary?market=usd-'
 
 @app.task()
 def get_available_currencies():
-    print(f'fetching currencies from {GET_MARKETS_URL}')
     timestamp = datetime.now()
 
     response = requests.get(GET_MARKETS_URL)
@@ -23,18 +21,14 @@ def get_available_currencies():
         is_success = data['success']
 
     except KeyError:
-        print('Get currencies fetch error')
+        print('Get available currencies bittrex api fetch error')
         return
 
-    if is_success:
-        fetched_currencies = {
-            entry['MarketCurrency']: entry['MarketCurrencyLong']
-            for entry in data['result']
-            if entry['MarketName'].startswith('USD-')
-        }
-    else:
-        print('Get currencies fetch success==false: ', data)
-        return
+    fetched_currencies = {
+        entry['MarketCurrency']: entry['MarketCurrencyLong']
+        for entry in data['result']
+        if entry['MarketName'].startswith('USD-')
+    }
 
     available_currencies = AvailableCurrencies.objects.first()
 
@@ -47,20 +41,16 @@ def get_available_currencies():
             currencies = fetched_currencies
         )
 
-    get_available_currencies.counter += 1
-    if get_available_currencies.counter == 3:
-        task = PeriodicTask.objects.get(name='get_currencies')
-        task.enabled = False
-        task.save()
-
-get_available_currencies.counter  = 0
-
-
 @app.task()
-def get_currency_data(currency):
+def get_currency_data(*args, currency):
     url = GET_CURRENCY_DATA_URL + currency
 
-    print(f'fetching currency data from {url}')
+    #  disable task when no client is waiting for data
+    task = PeriodicTask.objects.get(name=f'get_currency_data_{currency}')
+    if not args:
+        task.enabled = False
+        task.save()
+        return
 
     response = requests.get(url)
     data = response.json()
@@ -69,20 +59,16 @@ def get_currency_data(currency):
         is_success = data['success']
 
     except KeyError:
-        print('Get currency data fetch error')
+        print('Get currency data bittrex api fetch error')
         return
 
-    if is_success:
-        result = data['result'][0]
+    result = data['result'][0]
 
-        CurrencyData.objects.create(
-            name=currency,
-            market_name=result['MarketName'],
-            high=result['High'],
-            low=result['Low'],
-            last=result['Last'],
-            timestamp=result['TimeStamp'],
-        )
-    else:
-        print('Get currency data fetch success==false: ', data)
-        return
+    CurrencyData.objects.create(
+        name=currency,
+        market_name=result['MarketName'],
+        high=result['High'],
+        low=result['Low'],
+        last=result['Last'],
+        timestamp=result['TimeStamp'],
+    )

@@ -4,7 +4,7 @@ import withAuth from "../withAuth.js";
 
 const LogoutForm = (props) => {
   return (
-    <Button onClick={() => props.handleLogout(props.username)}>
+    <Button className="my-1" onClick={() => props.handleLogout(props.username)}>
       Logout {props.username}
     </Button>
   )

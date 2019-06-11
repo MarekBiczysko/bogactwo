@@ -12,6 +12,7 @@ class CurrencyDataSerializer(serializers.ModelSerializer):
         model = CurrencyData
         fields = '__all__'
 
+
 class UserSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSettings

@@ -1,4 +1,4 @@
-import { AuthUser } from "./api";
+import {AuthUser, LogoutUser} from "./api";
 import * as actions from "./actions.js"
 
 const handleAuth =  (username, password, action) =>  async dispatch => {
@@ -14,10 +14,10 @@ const handleAuth =  (username, password, action) =>  async dispatch => {
 
 export { handleAuth }
 
- const handleLogout = username => dispatch => {
-    // await LogoutUser(username);
-    localStorage.removeItem('token');
-    dispatch({type: actions.AUTH_LOGOUT})
-  };
+const handleLogout = username => async dispatch => {
+  await LogoutUser(username);
+  localStorage.removeItem('token');
+  dispatch({type: actions.AUTH_LOGOUT})
+};
 
 export { handleLogout }

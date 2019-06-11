@@ -1,6 +1,6 @@
 const login_url = 'http://localhost:8000/auth/token-auth/';
 const try_login_url = 'http://localhost:8000/auth/current_user/';
-const logout_url ='http://localhost:8000/auth/logout/';
+const logout_url ='http://localhost:8000/auth/logout_user/';
 const register_url ='http://localhost:8000/auth/create_user/';
 
 export const addCurrencyListFetchTask = async () => {
@@ -48,14 +48,15 @@ export const AuthUser = async (username, password, action) => {
     .then(res => res.json())
 };
 
-export const LogoutUser = async (user) => {
+export const LogoutUser = async (username) => {
   fetch(logout_url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: `JWT ${localStorage.getItem('token')}`
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(username),
   })
     .then(res => res.json())
     .then(data => {

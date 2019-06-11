@@ -23,7 +23,7 @@ function AuthForm(props) {
   return (
     <Form inline>
       <Input
-        className={'mr-1'}
+        className={'mr-1 my-1'}
         value={username}
         onChange={e => setUsername(e.target.value)}
         placeholder="Username"
@@ -33,7 +33,7 @@ function AuthForm(props) {
         onKeyPress={handleKeyPress}
       />
       <Input
-        className={'mr-1'}
+        className={'mr-1 my-1'}
         value={password}
         onChange={e => setPassword(e.target.value)}
         placeholder="Password"
@@ -43,7 +43,7 @@ function AuthForm(props) {
         onKeyPress={handleKeyPress}
       />
 
-      <Button onClick={handleSubmit}>
+      <Button className={'my-1'} onClick={handleSubmit}>
         {props.action}
       </Button>
 

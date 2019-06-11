@@ -25,9 +25,6 @@ class CurrencyData(models.Model):
 @receiver(post_save, sender=CurrencyData)
 def broadcast_currency_data(sender, instance, *args, **kwargs):
     channel_layer = get_channel_layer()
-    print('broadcast_currency_data signal')
-    print('channel layer: ', channel_layer)
-
     group = f'currency_data_{instance.name}'
 
     async_to_sync(channel_layer.group_send)(
@@ -61,8 +58,6 @@ def allow_only_one_instance(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=AvailableCurrencies)
 def broadcast_available_currencies(sender, instance, *args, **kwargs):
     channel_layer = get_channel_layer()
-    print('broadcast_available_currencies signal')
-    print('channel layer: ', channel_layer)
 
     async_to_sync(channel_layer.group_send)(
         "currency_list",

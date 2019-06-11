@@ -10,7 +10,3 @@ app = Celery('crypto_market', broker='redis://127.0.0.1:6379')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-
-@app.task()
-def try_celery():
-    print("Trying out Celery")

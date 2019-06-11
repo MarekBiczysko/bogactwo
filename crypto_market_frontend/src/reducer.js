@@ -26,9 +26,7 @@ const reducer = (state = initialstate, action) => {
 
   if (action.type === actions.AUTH_LOGOUT) {
     return {
-      ...state,
-      authenticated: false,
-      username: null
+      ...initialstate,
     }
   }
 
