@@ -4,7 +4,7 @@ import ItemsCarousel from 'react-items-carousel';
 import {isEqual} from "lodash";
 import CurrencyListCarouselButton from "./CurrencyListCarouselButton";
 import connect from "react-redux/es/connect/connect";
-import {setSelected} from "../actions";
+import {setSelectedSettings} from "../utils";
 
 const shallowCompare = (obj1, obj2) => {
   return (Object.keys(obj1).length === Object.keys(obj2).length &&
@@ -26,10 +26,10 @@ class CurrencyListCarousel extends React.Component {
 
     if (index >= 0) {
       let filteredArray = this.props.selected.filter(item => item !== key);
-      this.props.setSelected(filteredArray);
+      this.props.setSelectedSettings(filteredArray);
     } else {
       let newArray = [key].concat(this.props.selected);
-      this.props.setSelected(newArray);
+      this.props.setSelectedSettings(newArray);
     }
   };
 
@@ -76,4 +76,4 @@ const mapStateToProps = (state) => ({
   selected: state.selected,
 });
 
-export default connect(mapStateToProps, {setSelected})(CurrencyListCarousel);
+export default connect(mapStateToProps, {setSelectedSettings})(CurrencyListCarousel);

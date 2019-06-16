@@ -1,4 +1,4 @@
-import {AuthUser, LogoutUser} from "./api";
+import {AuthUser, LogoutUser, putSettings} from "./api";
 import * as actions from "./actions.js"
 
 const handleAuth =  (username, password, action) =>  async dispatch => {
@@ -21,3 +21,11 @@ const handleLogout = username => async dispatch => {
 };
 
 export { handleLogout }
+
+
+const setSelectedSettings = selected => async dispatch => {
+  await putSettings(selected);
+  dispatch(actions.setSelected(selected))
+};
+
+export { setSelectedSettings }

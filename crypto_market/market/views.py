@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.views import APIView
+
 
 from market.celery import start_fetch_available_currencies, start_fetch_currency_data
 from .models import CurrencyData, UserSettings, AvailableCurrencies
@@ -23,8 +24,30 @@ class AvailableCurrenciesView(generics.ListCreateAPIView):
 
 
 class UserSettingsView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = UserSettings
+    queryset = UserSettings.objects.all()
     serializer_class = UserSettingsSerializer
+
+    def get_object(self):
+        try:
+            return self.get_queryset().get(user=self.request.user)
+        except UserSettings.DoesNotExist:
+            return None
+
+    def perform_create(self):
+        settings_obj, created = self.queryset.update_or_create(
+            user=self.request.user,
+            defaults={
+                'selected': self.request.data['settings']['selected']
+                }
+        )
+        serializer = self.serializer_class(settings_obj, data=self.request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+        if created:
+            return HttpResponse(serializer.data, status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status.HTTP_200_OK)
 
 
 class StartFetchAvailableCurrencies(APIView):

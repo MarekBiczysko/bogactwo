@@ -34,14 +34,17 @@ class NavBar extends React.Component {
         />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            <UncontrolledDropdown nav inNavbar className="mr-5 my-1">
-              <DropdownToggle>
-                Create Account
-              </DropdownToggle>
-              <DropdownMenu right className="ml-5 px-1">
-                <AuthForm action={'Register'} />
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            {
+              !authed &&
+              <UncontrolledDropdown nav inNavbar className="mr-5 my-1">
+                <DropdownToggle>
+                  Create Account
+                </DropdownToggle>
+                <DropdownMenu right className="ml-5 px-1">
+                  <AuthForm action={'Register'}/>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            }
             <NavItem>
               {
                 authed

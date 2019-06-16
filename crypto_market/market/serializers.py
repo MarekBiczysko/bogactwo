@@ -14,6 +14,19 @@ class CurrencyDataSerializer(serializers.ModelSerializer):
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    settings = serializers.JSONField()
+
+    def validate_settings(self, settings):
+        selected = settings.get('selected')
+        if selected:
+            assert isinstance(selected, list)
+            assert all([isinstance(elem, str) for elem in selected])
+
+        return {
+            'selected': selected
+        }
+
     class Meta:
         model = UserSettings
         fields = '__all__'

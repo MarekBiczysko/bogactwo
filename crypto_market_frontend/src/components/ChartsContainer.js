@@ -2,8 +2,16 @@ import React from 'react';
 import {Container, Row} from 'reactstrap';
 import ChartContainer from "./ChartContainer";
 import connect from "react-redux/es/connect/connect";
+import {setSelectedSettings} from "../utils";
+import { fetchSettings } from "../api";
 
 class ChartsContainer extends React.Component {
+
+  async componentDidMount() {
+    const {settings} = await fetchSettings();
+    const selected = settings && settings.selected;
+    selected && this.props.setSelectedSettings(selected);
+  }
 
   createChildren = (selected) => {
     return Object.keys(selected).map((key) => {
@@ -38,4 +46,4 @@ const mapStateToProps = state => ({
   selected: state.selected,
 });
 
-export default connect(mapStateToProps)(ChartsContainer);
+export default connect(mapStateToProps, {setSelectedSettings})(ChartsContainer);
