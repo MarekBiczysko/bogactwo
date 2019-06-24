@@ -64,11 +64,13 @@ def get_currency_data(*args, currency):
 
     result = data['result'][0]
 
-    CurrencyData.objects.create(
+    CurrencyData.objects.update_or_create(
         name=currency,
         market_name=result['MarketName'],
-        high=result['High'],
-        low=result['Low'],
-        last=result['Last'],
-        timestamp=result['TimeStamp'],
+        defaults={
+            'high': result['High'],
+            'low': result['Low'],
+            'last': result['Last'],
+            'timestamp': result['TimeStamp'],
+        }
     )
