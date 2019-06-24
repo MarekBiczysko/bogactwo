@@ -4,6 +4,7 @@ const initialstate = {
   authenticated: false,
   username: null,
   selected: [],
+  errorMsg: null,
 };
 
 const reducer = (state = initialstate, action) => {

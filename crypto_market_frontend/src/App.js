@@ -5,25 +5,19 @@ import NavBar from "./components/Navbar";
 import Market from "./components/Market";
 import {connect} from "react-redux";
 
-class App extends React.Component {
-  state = {
-    isLogged: false, errorMsg: null
-  };
+import {UncontrolledAlert, Container} from 'reactstrap';
 
-  static getDerivedStateFromProps(props) {
-    return {
-      isLogged: props.authed,
-      errorMsg: props.errorMsg
-    }
-  }
+class App extends React.Component {
 
   render() {
+
+    const {authenticated, errorMsg} = this.props;
 
     return (
       <React.Fragment>
         <NavBar />
         {
-          this.state.isLogged
+          authenticated
             ? <Market/>
             : (
               <p style={{textAlign: 'center', paddingTop: 50}}>
@@ -31,14 +25,19 @@ class App extends React.Component {
               </p>
             )
         }
-        {!!this.props.errorMsg && <p>{this.props.errorMsg}</p>}
+        {
+          !!errorMsg &&
+          <Container>
+            <UncontrolledAlert color="danger">{errorMsg}</UncontrolledAlert>
+          </Container>
+        }
       </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  authed: state.authenticated,
+  authenticated: state.authenticated,
   errorMsg: state.errorMsg,
 });
 

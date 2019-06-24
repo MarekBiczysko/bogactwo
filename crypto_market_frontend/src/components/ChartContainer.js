@@ -134,7 +134,6 @@ export default class ChartContainer extends React.Component {
         {
           this.state.fetched ?
             <Chart
-              ref={this.chartRef}
               data={this.state.chartData}
               options={this.chartOptions}
             />

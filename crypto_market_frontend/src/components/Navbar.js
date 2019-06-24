@@ -21,7 +21,7 @@ class NavBar extends React.Component {
   toggle = () => this.setState({isOpen: !this.state.isOpen});
 
   render() {
-    const {authed, username} = this.props;
+    const {authenticated, username} = this.props;
 
     return (
 
@@ -35,7 +35,7 @@ class NavBar extends React.Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             {
-              !authed &&
+              !authenticated &&
               <UncontrolledDropdown nav inNavbar className="mr-5 my-1">
                 <DropdownToggle>
                   Create Account
@@ -47,7 +47,7 @@ class NavBar extends React.Component {
             }
             <NavItem>
               {
-                authed
+                authenticated
                   ? <LogoutForm username={username} />
                   : <AuthForm action={'Login'} />
               }
@@ -61,7 +61,7 @@ class NavBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  authed: state.authenticated || false,
+  authenticated: state.authenticated || false,
   username: state.username,
 });
 

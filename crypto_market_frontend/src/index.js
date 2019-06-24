@@ -6,7 +6,6 @@ import './index.css';
 import App from './App';
 
 import {Provider} from 'react-redux';
-
 import reduxThunk from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
 import reducer from './reducer.js';
