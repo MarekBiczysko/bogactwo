@@ -20,21 +20,14 @@ class CurrencyDataConsumer(WebsocketConsumer):
         )
 
     def currency_data_update(self, event):
-        name = event['name']
-        market_name = event['market_name']
-        high = event['high']
-        low = event['low']
-        last = event['last']
-        timestamp = event['timestamp']
-
         self.send(text_data=json.dumps(
             {
-                'name': name,
-                'market_name': market_name,
-                'high': high,
-                'low': low,
-                'last': last,
-                'timestamp': timestamp,
+                'name': event['name'],
+                'market_name': event['market_name'],
+                'high': event['high'],
+                'low': event['low'],
+                'last': event['last'],
+                'timestamp': event['timestamp'],
             }
         ))
 
@@ -55,10 +48,8 @@ class CurrencyListConsumer(WebsocketConsumer):
         )
 
     def currency_list_update(self, event):
-        currency_list = event['currency_list']
-
         self.send(text_data=json.dumps(
             {
-                'currency_list': currency_list,
+                'currency_list': event['currency_list'],
             }
         ))
